@@ -1,0 +1,483 @@
+---
+layout: default
+title: Documentation - SBOL Stack
+description: Documentation for the SBOL Stack RESTful API
+---
+<div id="api">
+
+<h2>Table of Contents</h2>
+
+<div class="api-section">
+    <ul id="toc">
+
+        <li><a href="#overview">1. API Overview</a></li>
+        <li><a href="#instances">2. Sample Instances</a></li>
+        
+        <li><a href="#installation">3. Installation</a>
+            <!--<ul>
+                <li><a href="#docker">3.1. Docker</a></li>
+                <li><a href="#aws-image">3.2. AWS Image</a></li>
+                <li><a href="#manual-installation">3.3. Manual Installation</a></li>
+                </ul>-->
+        </li>
+
+        <li><a href="#configuration">4. Configuration</a></li>
+
+        <li><a href="#client-libraries">5. Client Libraries</a></li>
+
+        <li><a href="#restful-api">6. RESTful API</a>
+            <ul>
+                <li><a href="#data-upload">6.1. Data Upload</a>
+                    <ul>
+                        <li><a href="#create-store">POST /store/create</a></li>
+                        <li><a href="#upload">POST /</a></li>
+                    </ul>
+                </li>
+                <li><a href="#sparql">6.2. SPARQL</a>
+                    <ul>
+                        <li><a href="#get-sparql">GET /sparql</a></li>
+                        <li><a href="#post-sparql">POST /sparql</a></li>
+                    </ul>
+                </li>
+                <li><a href="#get-component">6.3. Components</a>
+
+                    <ul>
+                        <li><a href="#get-component-count">GET /component/count</a></li>
+                        <li><a href="#get-component-sbol">GET /component/<i>uri</i>/sbol</a></li>
+                        <li><a href="#post-component-sbol">POST /component/sbol</a></li>
+                        <li><a href="#get-component-search-sbol">GET /component/search/sbol</a></li>
+                        <li><a href="#get-component-search-metadata">GET /component/search/metadata</a></li>
+                        <li><a href="#post-component-search-template">POST /component/search/template</a></li>
+                    </ul>
+                </li>
+                <li><a href="#get-module">6.4. Modules</a>
+
+                    <ul>
+                        <li><a href="#get-module-count">GET /module/count</a></li>
+                        <li><a href="#get-module-sbol">GET /module/<i>uri</i>/sbol</a></li>
+                        <li><a href="#post-module-sbol">POST /module/sbol</a></li>
+                        <li><a href="#get-module-search-sbol">GET /module/search/sbol</a></li>
+                        <li><a href="#get-module-search-metadata">GET /module/search/metadata</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<h2 id="overview">1. API Overview</h2>
+
+<div class="api-section">
+    <p>The SBOL Stack provides a RESTful API to encapsulate the underlying triplestore, providing semantic access to the SBOL data model.</p>
+    <p>The API can be accessed using any standard HTTP client library.  Additionally, native libraries encapsulating the stack API are available for Java and JavaScript.</p>
+    <p>Each instance of the SBOL Stack can provide an unlimited number of independent stores.  Stores can be created using the <code>/store/create</code> endpoint, and then any further API call can be directed to a particular store by prepending <code>/store/<b>store_name</b>/</code> to the URI.  If no store is specified, the default store listed in the configuration will be used.</p>
+</div>
+
+
+<h2 id="instances">2. Sample Instances</h2>
+
+<div class="api-section">
+    <p>The following instances of the stack are publicly available for testing purposes:</p>
+
+    <ul>
+        <li><code>http://biocad.ncl.ac.uk/igem</code> &mdash; parts from the iGEM database
+
+            <!--
+            <ul>
+                <li>Example 1: Retrieve 100 different promoters</li>
+                <li>Example 2: Search for any components containing blah</li>
+            </ul>
+            -->
+        
+        </li>
+
+    </ul>
+
+</div>
+
+<h2 id="installation">3. Installation</h2>
+<div class="api-section">
+
+<!--<h3 id="docker">3.1. Docker</h3>
+    <div class="api-section">-->
+
+    <p>
+    The easiest way to install the SBOL Stack is using <a href="https://www.docker.com/">Docker</a>.  Docker is a platform that allows pre-configured applications to be deployed anywhere, allowing the SBOL Stack to be installed as a single image with no prerequisites other than Docker itself.
+    </p>
+
+    <br />
+
+    <h4>From Prebuilt Image</h4>
+
+    <p>First, install Docker:</p>
+
+    <pre>sudo apt-get install docker.io</pre>
+
+    <p>Then run the SBOL Stack docker image:</p>
+
+    <p>
+    <pre>docker run -p 9090:9090 -d keithf/sbolstack:2016-04-25</pre>
+    </p>
+
+    <p>The SBOL Stack will now be available at <code>http://localhost:9090</code>.  The Stack can be used immediately with any of the <a href="#client-libraries">client libraries</a> or the <a href="#restful-api">RESTful API</a>.</p>
+
+    <br />
+
+    <h4>From Source</h4>
+
+    <p>First, install Docker and git:</p>
+
+    <pre>sudo apt-get install docker.io git</pre>
+
+    <p>Then clone the SBOL Stack docker repository:</p>
+
+    <pre>git clone https://github.com/ICO2S/sbolstack-docker.git
+cd sbolstack-docker</pre>
+
+    <p>You may want to change the default store name, users, and permissions in the <a href="#configuration">configuration file</a>.  Then, build and run the Stack using Docker:</p>
+
+    <pre>docker build -t icos/sbolstack:2016-04-25 .
+docker run -p 9090:9090 -d icos/sbolstack:2016-04-25</pre>
+
+    <p>As with the prebuilt image, the SBOL Stack will now be available at <code>http://localhost:9090</code>.  The Stack can be used immediately with any of the <a href="#client-libraries">client libraries</a> or the <a href="#restful-api">RESTful API</a>.</p>
+</div>
+
+<!--
+<h3 id="aws-image">3.2. AWS Image</h3>
+<div class="api-section">
+</div>
+
+<h3 id="manual-installation">3.3. Manual Installation</h3>
+<div class="api-section">
+
+    <p>
+    The SBOL Stack consists of two components: an instance of <a href="http://rdf4j.org/">OpenRDF Sesame v4.0.0</a></li>, and an instance of the Stack API software.  The SBOL Stack will run in most environments providing the following requirements are satisfied:</p>
+    <ul>
+        <li>A Java Virtual Machine: <a href="http://openjdk.java.net/">OpenJDK</a> 1.8+ or <a href="https://java.com/en/download/">Oracle&reg; Java</a> 8+</li>
+        <li><a href="https://nodejs.org/en/">node.js</a> version 4.2.0+</a></li>
+    </ul>
+
+</div>
+-->
+
+
+<h2 id="configuration">4. Configuration</h2>
+<div class="api-section">
+
+    <p>The SBOL Stack has a JSON configuration file located in the <code>config</code> directory of the API software.</p>
+
+<ul>
+    <li>The <code>port</code> configuration variable defines the port to listen on for incoming API requests.</li>
+    <li>The <code>triplestore</code> configuration variable defines the URL of the OpenRDF Sesame instance, and the name of the default triplestore to use for API requests.  The default triplestore will be created automatically if it does not exist.</li>
+    <li>If the SBOL Stack API and OpenRDF Sesame are located on the same server, the <code>url</code> property may point to localhost, where the port depends on the Sesame configuration.</li>
+
+    <li>The <code>prefixes</code> configuration variable defines a list of URI prefixes to use to allow abbreviation of resource URIs.  While defining prefixes is not mandatory, it is recommended to improve readability of RDF/XML serialization.</li>
+</ul>
+
+<p>
+Additionally, the configuration file may contain a <code>users</code> variable with a list of users and their respective permissions.  The available permissions are:
+</p>
+
+<ul>
+    <li><code>create</code> &mdash; Allow creation of new stores</li>
+    <li><code>upload</code> &mdash; Allow upload of data</li>
+    <li><code>retrieve</code> &mdash; Allow retrieval and searching of data</li>
+    <li><code>sparql</code> &mdash; Allow SPARQL queries</li>
+</ul>
+
+<div>
+
+<p>If no permissions are specified for a user, their permissions will default to the <code>anonymousPermissions</code> property.</p>
+
+<br />
+
+<p>
+<pre>{
+    "port": 9090,
+
+    "triplestore": {
+        "url": "http://52.19.236.4:8085/openrdf-sesame",
+        "defaultStore": "sbolstack_v1"
+    },
+
+    "prefixes": {
+        "bacillondex": "http://www.bacillondex.org/"
+    },
+
+    "users": [
+        {
+            "name": "admin",
+            "password": "admin",
+            "permissions": [
+                "create", "upload", "retrieve", "sparql"
+            ]
+        }
+    ],
+
+    "anonymousPermissions": [
+        "retrieve", "sparql"
+    ]
+}
+</pre>
+<label>
+A sample SBOL Stack configuration file defining a single admin user with all permissions
+</label>
+    </p>
+
+</div>
+
+</div>
+
+<h2 id="client-libraries">2. Client Libraries</h2>
+
+<div class="api-section">
+    <p>
+    The SBOL Stack also provides client libraries for various languages.  These libraries implement the complete SBOL Stack API, enabling communication with Stack instances from external software.
+    </p>
+
+    <p>Client libraries are currently available for:</p>
+
+    <ul>
+        <li>Java
+            <ul>
+                <li><a href="https://github.com/ico2s/sbolstack-client-java">Source and README<a></li>
+                <li><a href="http://ico2s.github.io/sbolstack-client-java/">JavaDoc</a></li>
+            </ul>
+        </li>
+        <li>JavaScript
+            <ul>
+                <li><a href="https://github.com/ICO2S/sbolstack-frontend-js">Source</a></li>
+                <li><a href="http://npmjs.com/sbolstack-frontend">NPM package</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+<h2 id="restful-api">3. RESTful API</h2>
+
+<p>
+For languages without a dedicated client library, the SBOL Stack is accessible through a RESTful HTTP API.
+</p>
+
+<div class="api-section">
+
+    <h3 id="data-upload">3.1. Upload</h3>
+    <div class="api-section">
+    </div>
+
+        <h4 id="create-store">POST /store/create</h4>
+        <div class="api-section">
+
+            <p>Create a new store in the Stack.  This endpoint requires the <code>create</code> permission.</p>
+
+            <p>Parameters:</p>
+
+            <ul>
+                <li><code>storeName</code> &mdash; the name of the store to create</li>
+            </ul>
+
+            <!--
+            <p>Example: TODO</p>
+            -->
+
+        </div>
+
+        <h4 id="upload">POST /</h4>
+        <h4>POST /<i>storeName</i></h4>
+        <div class="api-section">
+
+            <p>Upload new data to the Stack, or to a specific named store.  This endpoint requires the <code>upload</code> permission.</p>
+
+        </div>
+
+
+</div>
+
+<div class="api-section">
+
+    <h3 id="sparql">3.2. SPARQL</h3>
+    <div class="api-section">
+
+        <h4 id="get-sparql">GET /sparql</h4>
+        <h4>GET /<i>storeName</i>/sparql</h4>
+        <div class="api-section">
+
+            <p>Query the stack using SPARQL.  The results will be returned as an RDF/XML serialization.</p>
+            <p>This endpoint requires the <code>sparql</code> permission.</p>
+
+            <p>Parameters:</p>
+
+            <ul>
+                <li><code>query</code> &mdash; the SPARQL query to execute</li>
+            </ul>
+
+            <!--
+            <p>Example: TODO</p>
+            -->
+
+        </div>
+
+        <h4 id="post-sparql">POST /sparql</h4>
+        <h4>POST /<i>storeName</i>/sparql</h4>
+        <div class="api-section">
+
+            <p>As <code>GET /sparql</code>, but the query is specified as a POST parameter.</p>
+            <p>This endpoint requires the <code>sparql</code> permission.</p>
+
+            <p>Parameters:</p>
+
+            <ul>
+                <li><code>query</code> &mdash; the SPARQL query to execute</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    <h3 id="get-component">3.3. Components</h3>
+
+    <div class="api-section">
+        <p>These endpoints are related to <code>ComponentDefinition</code> instances.</p>
+
+        <p>
+            Component endpoints of the form <code>/component/<i>uri</i>/*</code> refer
+            to an individual <code>ComponentDefinition</code>, where <i>uri</i> is
+            a fully qualified URI.
+        </p>
+
+        <div class="api-spacer">
+        </div>
+
+        <h4 id="get-component-count">GET /component/count</h4>
+        <h4>GET /<i>storeName</i>/component/count</h4>
+        <div class="api-section">
+            <p>Return the total number of <code>ComponentDefinition</code> instances present in the store.</p>
+            <p>Example: <a target="_blank" href="http://biocad.ncl.ac.uk/igem/component/count">http://biocad.ncl.ac.uk/igem/component/count</a></p>
+        </div>
+
+        <h4 id="get-component-sbol">GET /component/<i>uri</i>/sbol</h4>
+        <h4>GET /<i>storeName</i>/component/<i>uri</i>/sbol</h4>
+        <div class="api-section">
+            <p>Retrieve an SBOL2 RDF/XML document for the <code>ComponentDefinition</code>.  The document
+            will be complete the definition of any referenced URIs, where present in the stack (i.e.
+            all subcomponent definitions and related resources will be included).</p>
+
+            <p>Example: <a target="_blank" href="http://biocad.ncl.ac.uk/igem/component/http%3A%2F%2Fparts.igem.org%2FPart%3ABBa_S04352/sbol">http://biocad.ncl.ac.uk/igem/component/http%3A%2F%2Fparts.igem.org%2FPart%3ABBa_S04352/sbol</a>
+        </div>
+
+        <h4 id="post-component-sbol">POST /component/sbol</h4>
+        <h4>POST /<i>storeName</i>/component/sbol</h4>
+        <div class="api-section">
+            <p>As <code>GET /component/<i>uri</i>/sbol</code>, but the component URI is specified as a POST parameter.</p>
+
+            <p>Parameters:</p>
+
+            <ul>
+                <li><code>uri</code> &mdash; the URI of the component to retrieve</li>
+            </ul>
+        </div>
+
+        <h4 id="get-component-search-sbol">GET /component/search/sbol</h4>
+        <h4 id="get-component-search-metadata">GET /component/search/metadata</h4>
+        <h4>GET /<i>storeName</i>/component/search/sbol</h4>
+        <h4>GET /<i>storeName</i>/component/search/metadata</h4>
+        <div class="api-section">
+            <p>Search the stack for <code>ComponentDefinition</code> instances, returning either an SBOL document or JSON metadata describing the component(s).</p>
+
+            <p>Parameters (all optional):</p>
+
+            <ul>
+                <li><code>name</code> &mdash; the <code>dcterms:title</code> to search for</li>
+                <li><code>nameExactMatch</code> &mdash; if true, <code>name</code> is searched as a complete title.  Otherwise, <code>name</code> is parsed as a wildcard.</li>
+                <li><code>description</code> &mdash; the <code>dcterms:description</code> to search for</li>
+                <li><code>descriptionExactMatch</code> &mdash; if true, <code>description</code> is searched as a complete title.  Otherwise, <code>description</code> is parsed as a wildcard.</li>
+            </ul>
+
+            <p>Example: <a target="_blank" href="http://biocad.ncl.ac.uk/igem/component/search?name=BBa*">http://biocad.ncl.ac.uk/igem/component/search?name=BBa*</a></p>
+
+        </div>
+
+        <h4 id="post-component-search-template">POST /component/search/template</h4>
+        <h4>POST /<i>storeName</i>/component/search/template</h4>
+        <div class="api-section">
+            <p>Search the stack for <code>ComponentDefinition</code> instances matching an SBOL <code>ComponentDefinition</code> template.</p>
+
+            <p>Returns an SBOL2 document with a summary of all matching components.</p>
+
+            <p>Parameters:</p>
+
+            <ul>
+                <li><code>sbol</code> &mdash; an RDF/XML SBOL document containing a <code>ComponentDefinition</code> to match.
+            </ul>
+
+        </div>
+    </div>
+
+    <h3 id="get-module">3.4. Modules</h3>
+
+    <div class="api-section">
+        <p>These endpoints are related to <code>ModuleDefinition</code> instances.</p>
+
+        <p>
+            Module endpoints of the form <code>/module/<i>uri</i>/*</code> refer
+            to an individual <code>ModuleDefinition</code>, where <i>uri</i> is
+            a fully qualified URI.
+        </p>
+
+        <div class="api-spacer">
+        </div>
+
+        <h4 id="get-module-count">GET /module/count</h4>
+        <h4>GET /<i>storeName</i>/module/count</h4>
+        <div class="api-section">
+            <p>Return the total number of <code>ModuleDefinition</code> instances present in the stack.</p>
+            <p>Example: <a target="_blank" href="http://biocad.ncl.ac.uk/igem/module/count">http://biocad.ncl.ac.uk/igem/module/count</a></p>
+        </div>
+
+        <h4 id="get-module-sbol">GET /module/<i>uri</i>/sbol</h4>
+        <h4>GET /<i>storeName</i>/module/<i>uri</i>/sbol</h4>
+        <div class="api-section">
+            <p>Retrieve an SBOL2 RDF/XML document for the <code>ModuleDefinition</code>.  The document
+            will be complete the definition of any referenced URIs, where present in the stack (i.e.
+            all submodule definitions and related resources will be included).</p>
+
+        </div>
+
+        <h4 id="post-module-sbol">POST /module/sbol</h4>
+        <h4>POST /<i>storeName</i>/module/sbol</h4>
+        <div class="api-section">
+            <p>As <code>GET /module/<i>uri</i>/sbol</code>, but the module URI is specified as a POST parameter.</p>
+
+            <p>Parameters:</p>
+
+            <ul>
+                <li><code>uri</code> &mdash; the URI of the module to retrieve</li>
+            </ul>
+        </div>
+
+        <h4 id="get-module-search-sbol">GET /module/search/sbol</h4>
+        <h4 id="get-module-search-metadata">GET /module/search/metadata</h4>
+        <h4>GET /<i>storeName</i>/module/search/sbol</h4>
+        <h4>GET /<i>storeName</i>/module/search/metadata</h4>
+        <div class="api-section">
+            <p>Search the stack for <code>ModuleDefinition</code> instances, returning either an SBOL document or JSON metadata describing the module(s).</p>
+
+            <p>Parameters (all optional):</p>
+
+            <ul>
+                <li><code>name</code> &mdash; the <code>dcterms:title</code> to search for</li>
+                <li><code>nameExactMatch</code> &mdash; if true, <code>name</code> is searched as a complete title.  Otherwise, <code>name</code> is parsed as a wildcard.</li>
+                <li><code>description</code> &mdash; the <code>dcterms:description</code> to search for</li>
+                <li><code>descriptionExactMatch</code> &mdash; if true, <code>description</code> is searched as a complete title.  Otherwise, <code>description</code> is parsed as a wildcard.</li>
+            </ul>
+
+
+        </div>
+    </div>
+
+</div>
+
+</div>
+
