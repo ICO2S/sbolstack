@@ -102,28 +102,28 @@ description: Documentation for the SBOL Stack RESTful API
     <div class="api-section">-->
 
     <p>
-    The easiest way to install the SBOL Stack is using <a href="https://www.docker.com/">Docker</a>.  Docker is a platform that allows pre-configured applications to be deployed anywhere, allowing the SBOL Stack to be installed as a single image with no prerequisites other than Docker itself.
+    The SBOL Stack is deployed using <a href="https://www.docker.com/">Docker</a>.  Docker is a platform that allows pre-configured applications to be deployed anywhere, allowing the SBOL Stack to be installed as a single image with no prerequisites other than Docker itself.
     </p>
 
     <br />
 
     <h4>From Prebuilt Image</h4>
 
-    <p>First, install Docker:</p>
+    <p>First, install Docker.  The installation instructions will vary depending on your operating system.  For Ubuntu, the command is simply:</p>
 
     <pre>sudo apt-get install docker.io</pre>
 
-    <p>Then run the SBOL Stack docker image:</p>
+    <p>Equivalent instructions can be found for <a href="http://docs.docker.com/mac/">Mac</a> and <a href="http://docs.docker.com/windows/">Windows</a>. After installing, run the SBOL Stack docker image:</p>
 
     <p>
     <pre>docker run -p 9090:9090 -d keithf/sbolstack:2016-04-25</pre>
     </p>
 
-    <p>The SBOL Stack will now be available at <code>http://localhost:9090</code>.  The Stack can be used immediately with any of the <a href="#client-libraries">client libraries</a> or the <a href="#restful-api">RESTful API</a>.</p>
+    <p>The SBOL Stack will now be available at <code>http://localhost:9090</code> if you are running Docker on Linux, or at the address shown by <code>docker-machine ip</code> otherwise.  The Stack can be used immediately with any of the <a href="#client-libraries">client libraries</a> or the <a href="#restful-api">RESTful API</a>.</p>
 
     <br />
 
-    <h4>From Source</h4>
+    <h4>From Source (Linux)</h4>
 
     <p>First, install Docker and git:</p>
 
