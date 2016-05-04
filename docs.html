@@ -190,21 +190,57 @@ docker run \
     <p>It is possible to build (and customise) your own Docker images. First, install Docker and git:</p>
 
     <pre>sudo apt-get install docker.io git</pre>
+    
+    <br />
+    <br />
+    <br />
 
-    <p>Then clone the SBOL Stack docker repository:</p>
+    <p><b>Building the SBOL Stack Docker image</b></p>
+
+    <p>First, clone the SBOL Stack docker repository:</p>
 
     <pre>git clone https://github.com/ICO2S/sbolstack-docker.git
-cd sbolstack-docker</pre>
+cd sbolstack-docker/basic-image</pre>
 
     <p>You may want to change the default store name, users, and permissions in the <a href="#configuration">configuration file</a>.  Then, build and run the Stack using Docker:</p>
 
-    <pre>docker build -t {your-docker-user}/sbolstack:{your-version-tag} .
-docker run \
+    <pre>docker build -t {your-docker-user}/sbolstack:{your-version-tag} .</pre>
+
+    <p>The image can then be run as follows:</p>
+
+    <pre>docker run \
     -v $HOME/docker/stack:/mnt/data \
     -p 9090:9090 \
     --name sbolstack -d {your-docker-user}/sbolstack:{your-version-tag}</pre>
 
     <p>As with the prebuilt image, the SBOL Stack will now be available at <code>http://localhost:9090</code>.  The Stack can be used immediately with any of the <a href="#client-libraries">client libraries</a> or the <a href="#restful-api">RESTful API</a>.</p>
+
+    <br />
+    <br />
+    <br />
+
+
+    <p><b>Building the SynBioHub Docker image</b></p>
+
+    <p>Building the Docker image for SynBioHub is performed in a similar fashion. First, clone the SBOL Stack docker repository:</p>
+
+    <pre>git clone https://github.com/ICO2S/synbiohub-docker.git
+cd synbiohub-docker</pre>
+
+    <p>Then:</p>
+
+    <pre>docker build -t {your-docker-user}/sbolstack:{your-version-tag} .</pre>
+
+    <p>Finally, a SynBioHub container can be created and started with the following command:</p>
+
+    <pre>
+docker run \
+    -v $HOME/docker/synbiohub:/mnt/data \
+    -p 7777:7777 \
+    --link sbolstack:sbolstack \
+    --name synbiohub -d {your-docker-user}/synbiohub:{your-version-tag}</pre>
+
+
 </div>
 
 <!--
