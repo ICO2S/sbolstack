@@ -126,8 +126,7 @@ mkdir -p $HOME/docker/stack
 docker run \
     -v $HOME/docker/stack:/mnt/data \
     -p 9090:9090 \
-    --name sbolstack -d keithf/sbolstack:v1.2.2d
-    </pre>
+    --name sbolstack -d keithf/sbolstack:v1.2.2d</pre>
     </p>
 
     <p>Docker images are 'immutable'; once a given container is shut down, all modified data vanishes. Therefore, any persistent data needs to be located outside of the container, and mounted each time a container is booted. In the example above, we initially create an empty 'docker/stack' directory. This directory is then mounted inside the Docker container once it starts. Any parts that are uploaded to the Stack are stored within the 'docker/stack' directory, so you should ensure that this location is backed up appropriately</p>
@@ -139,14 +138,12 @@ docker run \
 
     <pre>
 docker start sbolstack
-docker stop sbolstack
-    </pre>
+docker stop sbolstack</pre>
 
     <p>If you no longer require the container, it can be deleted in the following way:<p>
 
     <pre>
-docker rm -v sbolstack
-    </pre>
+docker rm -v sbolstack</pre>
 
     <p>Note that any data stored in <code>$HOME/docker/stack</code> will <i>not</i> be deleted; you will need to delete the directory manually if you need to. Therefore, the <code>docker rm</code> operation is extremely useful when upgrading to a new Stack image version, since your database and configuration files remain intact.
 
@@ -168,8 +165,7 @@ docker run \
     -v $HOME/docker/synbiohub:/mnt/data \
     -p 7777:7777 \
     --link sbolstack:sbolstack \
-    --name synbiohub -d keithf/synbiohub:v1.0
-    </pre>
+    --name synbiohub -d keithf/synbiohub:v1.0</pre>
 
    <p>The Docker 'run' command for the SynBioHub is very similar to that of the SBOL Stack. However, note the <code>--link</code> option. This command line option allows the SynBioHub container to communicate with the SBOL Stack container. It is important to specify the same name as was used to create the SBOL Stack container in order for the link to work (in this case, we used <code>sbolstack</code>).</p>
 
@@ -183,8 +179,7 @@ docker run \
 docker run \
     -v $HOME/docker/synbiohub:/mnt/data \
     -p 7777:7777 \
-    --name synbiohub -d keithf/synbiohub:v1.0
-    </pre>
+    --name synbiohub -d keithf/synbiohub:v1.0</pre>
 
 
 
