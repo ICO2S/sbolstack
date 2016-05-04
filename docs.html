@@ -133,6 +133,7 @@ docker run \
 
     <p>The '-p' option in the above command exposes port 9090 from the Stack container to 9090 on the host machine. Therefore, the SBOL Stack will now be available at <code>http://localhost:9090</code> if you are running Docker on Linux, or at the address shown by <code>docker-machine ip</code> if you are running Docker on OSX or Windows.  The Stack can be used immediately with any of the <a href="#client-libraries">client libraries</a> or the <a href="#restful-api">RESTful API</a>.</p>
 
+    <p>Please note that you may need to wait for up to a minute before the SBOL Stack becomes become available on port 9090.</p>
 
     <p>It is possible to start and stop the service as follows:<p>
 
@@ -171,7 +172,7 @@ docker run \
 
     <p>Once the SynBioHub container has started, you should be able to connect to the hub via the link: <a href="http://localhost:7777">http://localhost:7777</a>. The first time you run the SynBioHub, you will see a setup page, which asks you for the URL to the SBOL Stack that you wish to connect to. You should enter: <code>http://sbolstack:9090</code> here. Again, this is the name of the SBOL Stack Docker container that we created in the previous step. If you used a different container name, you should modify the URL accordingly.</p>
 
-
+    <p>Please note that you may need to wait for up to a minute before the SynBioHub Web pages become available.</p>
 
     <p>If you want to run the SynBioHub container on a <i>different</i> host machine, then the <code>--link</code> option is not required. In this case, when configuring the SynBioHub via its 'setup' page, you will need to enter the network hostname of the machine that is running the SBOL Stack container into the URL text box. The startup command for the SynBioHub is as follows:</p>
 
