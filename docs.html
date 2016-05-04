@@ -113,27 +113,86 @@ description: Documentation for the SBOL Stack RESTful API
 
     <pre>sudo apt-get install docker.io</pre>
 
-    <p>Equivalent instructions can be found for <a href="http://docs.docker.com/mac/">Mac</a> and <a href="http://docs.docker.com/windows/">Windows</a>.  There are two Docker images provided.  For the barebones Stack image with no existing data:</p>
+    <p>Equivalent Docker installation instructions can be found for <a href="http://docs.docker.com/mac/">Mac</a> and <a href="http://docs.docker.com/windows/">Windows</a>.</p>
 
-    <p>
-    <pre>docker run -p 9090:9090 -d keithf/sbolstack:2016-04-25</pre>
+    <p>There are two Docker images provided; an SBOL Stack container, and a SynBioHub container.</p>
+
+    <p><b>Starting a Stack container</b></p>
+    <pre>
+# For the first run, create an emtpy data directory:
+mkdir -p $HOME/docker/stack
+
+# Download, install and run the SBOL Stack:
+docker run \
+    -v $HOME/docker/stack:/mnt/data \
+    -p 9090:9090 \
+    --name sbolstack -d keithf/sbolstack:v1.2.2d
+    </pre>
     </p>
 
-    <p>For an instance with some example component definitions:</p>
+    <p>Docker images are 'immutable'; once a given container is shut down, all modified data vanishes. Therefore, any persistent data needs to be located outside of the container, and mounted each time a container is booted. In the example above, we initially create an empty 'docker/stack' directory. This directory is then mounted inside the Docker container once it starts. Any parts that are uploaded to the Stack are stored within the 'docker/stack' directory, so you should ensure that this location is backed up appropriately</p>
 
-    <p>
-    <pre>docker run -p 9090:9090 -d keithf/sbolstack-helloworld:2016-04-25</pre>
-    </p>
+    <p>The '-p' option in the above command exposes port 9090 from the Stack container to 9090 on the host machine. Therefore, the SBOL Stack will now be available at <code>http://localhost:9090</code> if you are running Docker on Linux, or at the address shown by <code>docker-machine ip</code> if you are running Docker on OSX or Windows.  The Stack can be used immediately with any of the <a href="#client-libraries">client libraries</a> or the <a href="#restful-api">RESTful API</a>.</p>
 
-    <p>
 
-    <p>The SBOL Stack will now be available at <code>http://localhost:9090</code> if you are running Docker on Linux, or at the address shown by <code>docker-machine ip</code> otherwise.  The Stack can be used immediately with any of the <a href="#client-libraries">client libraries</a> or the <a href="#restful-api">RESTful API</a>.</p>
+    <p>It is possible to start and stop the service as follows:<p>
+
+    <pre>
+docker start sbolstack
+docker stop sbolstack
+    </pre>
+
+    <p>If you no longer require the container, it can be deleted in the following way:<p>
+
+    <pre>
+docker rm -v sbolstack
+    </pre>
+
+    <p>Note that any data stored in <code>$HOME/docker/stack</code> will <i>not</i> be deleted; you will need to delete the directory manually if you need to. Therefore, the <code>docker rm</code> operation is extremely useful when upgrading to a new Stack image version, since your database and configuration files remain intact.
+
 
     <br />
+    <br />
+    <br />
 
-    <h4>From Source (Linux)</h4>
+    <p><b>Starting the SynBioHub container</b></p>
 
-    <p>First, install Docker and git:</p>
+    <p>If you wish to run your own instance of SynBioHub, you can do so via another Docker image. Here, we assume that you will be running the SynBioHub container on the <i>same</i> host as the SBOL Stack container described previously.</p>
+
+    <pre>
+# For the first run, create an emtpy data directory:
+mkdir -p $HOME/docker/synbiohub
+
+# Download, install and run the SynBioHub:
+docker run \
+    -v $HOME/docker/synbiohub:/mnt/data \
+    -p 7777:7777 \
+    --link sbolstack:sbolstack \
+    --name synbiohub -d keithf/synbiohub:v1.0
+    </pre>
+
+   <p>The Docker 'run' command for the SynBioHub is very similar to that of the SBOL Stack. However, note the <code>--link</code> option. This command line option allows the SynBioHub container to communicate with the SBOL Stack container. It is important to specify the same name as was used to create the SBOL Stack container in order for the link to work (in this case, we used <code>sbolstack</code>).</p>
+
+    <p>Once the SynBioHub container has started, you should be able to connect to the hub via the link: <a href="http://localhost:7777">http://localhost:7777</a>. The first time you run the SynBioHub, you will see a setup page, which asks you for the URL to the SBOL Stack that you wish to connect to. You should enter: <code>http://sbolstack:9090</code> here. Again, this is the name of the SBOL Stack Docker container that we created in the previous step. If you used a different container name, you should modify the URL accordingly.</p>
+
+
+
+    <p>If you want to run the SynBioHub container on a <i>different</i> host machine, then the <code>--link</code> option is not required. In this case, when configuring the SynBioHub via its 'setup' page, you will need to enter the network hostname of the machine that is running the SBOL Stack container into the URL text box. The startup command for the SynBioHub is as follows:</p>
+
+    <pre>
+docker run \
+    -v $HOME/docker/synbiohub:/mnt/data \
+    -p 7777:7777 \
+    --name synbiohub -d keithf/synbiohub:v1.0
+    </pre>
+
+
+
+    <hr />
+
+    <h4>[Optional] Building the Docker images Source (Linux)</h4>
+
+    <p>It is possible to build (and customise) your own Docker images. First, install Docker and git:</p>
 
     <pre>sudo apt-get install docker.io git</pre>
 
@@ -144,8 +203,11 @@ cd sbolstack-docker</pre>
 
     <p>You may want to change the default store name, users, and permissions in the <a href="#configuration">configuration file</a>.  Then, build and run the Stack using Docker:</p>
 
-    <pre>docker build -t icos/sbolstack:2016-04-25 .
-docker run -p 9090:9090 -d icos/sbolstack:2016-04-25</pre>
+    <pre>docker build -t {your-docker-user}/sbolstack:{your-version-tag} .
+docker run \
+    -v $HOME/docker/stack:/mnt/data \
+    -p 9090:9090 \
+    --name sbolstack -d {your-docker-user}/sbolstack:{your-version-tag}</pre>
 
     <p>As with the prebuilt image, the SBOL Stack will now be available at <code>http://localhost:9090</code>.  The Stack can be used immediately with any of the <a href="#client-libraries">client libraries</a> or the <a href="#restful-api">RESTful API</a>.</p>
 </div>
