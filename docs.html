@@ -166,7 +166,7 @@ docker run \
     -v $HOME/docker/synbiohub:/mnt/data \
     -p 7777:7777 \
     --link sbolstack:sbolstack \
-    --name synbiohub -d keithf/synbiohub:v1.0</pre>
+    --name synbiohub -d keithf/synbiohub:v1.1.0</pre>
 
    <p>The Docker 'run' command for the SynBioHub is very similar to that of the SBOL Stack. However, note the <code>--link</code> option. This command line option allows the SynBioHub container to communicate with the SBOL Stack container. It is important to specify the same name as was used to create the SBOL Stack container in order for the link to work (in this case, we used <code>sbolstack</code>).</p>
 
@@ -180,7 +180,7 @@ docker run \
 docker run \
     -v $HOME/docker/synbiohub:/mnt/data \
     -p 7777:7777 \
-    --name synbiohub -d keithf/synbiohub:v1.0</pre>
+    --name synbiohub -d keithf/synbiohub:v1.1.0</pre>
 
 
 
