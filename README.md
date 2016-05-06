@@ -5,9 +5,10 @@ To learn more about the SBOL Stack, including installation instructions and docu
 
 The SBOL Stack source code is split into four separate repositories:
 
-* [Stack API](https://github.com/ICO2S/sbolstack-api)
-* [Java Client Library](https://github.com/ICO2S/sbolstack-client-java)
-* [JavaScript Client Library](https://github.com/ICO2S/sbolstack-frontend-js)
-* [SynBioHub](https://github.com/ICO2S/synbiohub)
+* [SBOL Stack API](https://github.com/ICO2S/sbolstack-api) - Provides an abstraction over the Sesame RDF Triplestore with SBOL Stack functionality
+* [Java Client Library](https://github.com/ICO2S/sbolstack-client-java) - Provides access to the SBOL Stack API from Java applications
+* [JavaScript Client Library](https://github.com/ICO2S/sbolstack-frontend-js) - Provides access to the SBOL Stack API from JavaScript applications
+* [SynBioHub](https://github.com/ICO2S/synbiohub) - Provides a Web-based frontend for browsing and updating an SBOL Stack instance
+
 
 
