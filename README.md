@@ -3,7 +3,7 @@ The [Synthetic Biology Open Language (SBOL) Stack](http://sbolstack.org) is a pl
 
 To learn more about the SBOL Stack, including installation instructions and documentation, visit [sbolstack.org](http://sbolstack.org).
 
-The SBOL Stack is split into four separate repositories:
+The SBOL Stack source code is split into four separate repositories:
 
 * [Stack API](https://github.com/ICO2S/sbolstack-api)
 * [Java Client Library](https://github.com/ICO2S/sbolstack-client-java)
