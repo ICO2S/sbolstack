@@ -1,7 +1,9 @@
 
 The [Synthetic Biology Open Language (SBOL) Stack](http://sbolstack.org) is a platform for storing, sharing, and publishing synthetic biology designs using the [Synthetic Biology Open Language (SBOL)](http://sbolstandard.org).
 
-To learn more about the SBOL Stack, including installation instructions and documentation, visit [sbolstack.org](http://sbolstack.org).
+To get started right away, we have provided a Docker image that contains a full SBOL Stack installation. Instructions on how to get up and running are provided [here](http://sbolstack.org/docs.html#installation). Alternatively, you can use our quick-start Amazon AWS image, which has an instance of the SBOL Stack pre-installed. 
+
+To learn more about the SBOL Stack, including full installation instructions and API documentation, visit [sbolstack.org](http://sbolstack.org).
 
 The SBOL Stack source code is split into four separate repositories:
 
