@@ -278,6 +278,7 @@ docker run \
     <li>If the SBOL Stack API and OpenRDF Sesame are located on the same server, the <code>url</code> property may point to localhost, where the port depends on the Sesame configuration.</li>
 
     <li>The <code>prefixes</code> configuration variable defines a list of URI prefixes to use to allow abbreviation of resource URIs.  While defining prefixes is not mandatory, it is recommended to improve readability of RDF/XML serialization.</li>
+    <li>The <code>otherStacks</code> configuration variable defines a list of URLs of other SBOL Stack instances.  The data from these instances will automatically be merged into any query to the local instance.</li>
 </ul>
 
 <p>
