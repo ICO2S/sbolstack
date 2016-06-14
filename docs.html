@@ -245,6 +245,58 @@ docker run \
     --link sbolstack:sbolstack \
     --name synbiohub -d {your-docker-user}/synbiohub:{your-version-tag}</pre>
 
+    <br/>
+    <br/>
+
+    <h4>[Optional] Installation without Docker</h4>
+
+    <p>It may be useful to install the SBOL Stack without Docker, in order to customise the installation and/or modify the SBOL Stack source code.</p>
+
+    <p>The prerequisites for the SBOL Stack are:</p>
+
+    <ul>
+        <li><a href="http://openjdk.java.net/">OpenJDK 8</a> or a compatible JVM</li>
+        <li><a href="http://tomcat.apache.org">Apache Tomcat 8</a></li>
+        <li><a href="http://archive.rdf4j.org/">OpenRDF Sesame</a> version 4.x.x</li>
+        <li><a href="http://nodejs.org">node.js</a> version 4.x.x with npm</li>
+    </ul>
+
+    <p>On Ubuntu 16.04, the dependencies can be installed from aptitude:</p>
+
+    <pre>sudo apt-get install git nodejs openjdk-8-jre-headless npm curl
+sudo update-alternatives --install /usr/bin/node node /usr/bin/nodejs 10</pre>
+
+    <p>The remaining dependencies, Apache Tomcat and OpenRDF Sesame, can be obtained using curl:</p>
+
+    <pre>curl -L http://mirror.catn.com/pub/apache/tomcat/tomcat-8/v8.0.35/bin/apache-tomcat-8.0.35.tar.gz | tar xzf -
+curl -L https://sourceforge.net/projects/sesame/files/Sesame%204/4.1.2/openrdf-sesame-4.1.2-sdk.tar.gz/download | tar xzf -
+sudo cp -r apache-tomcat-8.0.35 /opt/</pre>
+
+    <p>The OpenRDF Sesame WAR files then need to be placed in <code>/opt/apache-tomcat-8.0.35/webapps/</code>.  Sesame provides two Web applications: <code>openrdf-sesame</code> and <code>openrdf-workbench</code>.  While only <code>openrdf-sesame</code> is necessary for the SBOL Stack to operate, <code>openrdf-workbench</code> can be useful for debugging purposes.</p>
+
+    <pre>sudo cp ./openrdf-sesame-4.1.2/war/openrdf-sesame.war /opt/apache-tomcat-8.0.35/webapps/
+sudo cp ./openrdf-sesame-4.1.2/war/openrdf-workbench.war /opt/apache-tomcat-8.0.35/webapps/
+sudo /opt/apache-tomcat-8.0.35/bin/startup.sh</pre>
+
+    <p>OpenRDF Sesame should now be accessible at <code>http://localhost:8080/openrdf-sesame</code>, and the workbench at <code>http://localhost:8080/openrdf-workbench</code>.</p>
+
+    <h4>Installing the Stack API</h4>
+
+    <p>The latest version of the SBOL Stack API can be obtained using git:</p>
+
+    <pre>git clone https://github.com/ICO2S/sbolstack-api</pre>
+
+    <p>To install the dependencies for the SBOL Stack API server, run <code>npm install</code> from the newly cloned directory:</p>
+
+    <pre>cd sbolstack-api
+npm install</pre>
+
+    <p>The default configuration file for the SBOL Stack is located in <code>config/default.json</code>, and initially points to the triplestore <code>http://localhost:8080/openrdf-sesame</code> and runs the API on port 9090.  To start the SBOL Stack API, run:</p>
+
+    <pre>node server.js</pre>
+
+    <p>The SBOL Stack should now be accessible at <code>http://localhost:9090/</code>.</p>
+
 
 </div>
 
